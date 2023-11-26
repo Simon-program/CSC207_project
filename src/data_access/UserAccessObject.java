@@ -8,18 +8,14 @@ import java.util.*;
 
 public class UserAccessObject implements SearchUserDataAccessInterface {
 
-    public UserAccessObject(){
+    public UserAccessObject() {
 
     }
+
     private final Map<String, User> accounts = new HashMap<>();
 
 
-
-    public String getCurrUser(){
+    public String getCurrUser() {
         return "";
-    }
-
-    public User get(String username) {
-        return accounts.get(username);
     }
 }
