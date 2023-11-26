@@ -108,7 +108,9 @@ public class WatchlistView extends JPanel implements PropertyChangeListener {
         // Create the dropdown (combobox) for ratings
         String[] ratingOptions = {"1", "2", "3", "4", "5", "-"};
         JComboBox<String> ratingsDropdown = new JComboBox<>(ratingOptions);
-        ratingsDropdown.setSelectedItem(ratings.get(movie));
+
+        // TODO: ASSIGN Ratings Dropdown to the correct rating. If no rating, set to "-"
+
 
         JPanel controlsubpanel = new JPanel();
         controlsubpanel.setLayout(new BorderLayout(20,0));

@@ -107,7 +107,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
         // Create the dropdown (combobox) for ratings
         String[] ratingOptions = {"1", "2", "3", "4", "5", "-"};
         JComboBox<String> ratingsDropdown = new JComboBox<>(ratingOptions);
-        ratingsDropdown.setSelectedItem(ratings.get(movie));
+        ratingsDropdown.setSelectedItem(ratings.get(movie).toString());
 
         JPanel controlsubpanel = new JPanel();
         controlsubpanel.setLayout(new BorderLayout(20,0));
