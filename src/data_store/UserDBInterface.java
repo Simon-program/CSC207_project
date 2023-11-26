@@ -19,6 +19,8 @@ public interface UserDBInterface {
 
     public List<Movie> getRatings (String username);
 
+    public int getRating(String username, String movieID);
+
     public void addRating (String username, String movie, int rating);
 
     public void removeRating (String username, String movie);

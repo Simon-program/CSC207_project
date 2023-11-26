@@ -104,6 +104,14 @@ public class UserDBMap implements UserDBInterface {
         }
         return returnList;
     }
+    public int getRating(String username, String movieID) {
+        HashMap<String, UserMovie> userMovies = users.get(username).getUserMovies();
+        if (userMovies.containsKey(movieID)) {
+            return userMovies.get(movieID).getRating();
+        } else {
+            return 0;
+        }
+    }
 
     @Override
     public void addRating(String username, String movieID, int rating) {
