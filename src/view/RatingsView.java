@@ -38,7 +38,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
         getRatingsViewModel.addPropertyChangeListener(this);
     }
 
-    public void createRatingsPanel() {;
+    public void createRatingsPanel() {
         setLayout(new BorderLayout());
 
         // Create a scroll pane to hold the panel list

@@ -38,7 +38,7 @@ public class WatchlistView extends JPanel implements PropertyChangeListener {
         getWatchlistViewModel.addPropertyChangeListener(this);
     }
 
-    public void createWatchlistPanel() {;
+    public void createWatchlistPanel() {
         setLayout(new BorderLayout());
 
         // Create a scroll pane to hold the panel list
