@@ -33,6 +33,7 @@ public class Main {
     private static FileUserDataAccessObject fileUserDataAccessObject;
 
     private static MapUserDataAccessObject mapUserDataAccessObject;
+    private static UserRatingAccessObject ratingAccessObject;
 
     private static SignupUserDataAccessInterface signupUserDAO;
     private static LoginUserDataAccessInterface loginUserDAO;
@@ -71,8 +72,9 @@ public class Main {
         GetRatingsViewModel getRatingsViewModel = new GetRatingsViewModel();
         MovieInfoViewModel movieInfoViewModel = new MovieInfoViewModel();
 
-        UserRatingAccessObject ratingAccessObject = new UserRatingAccessObject();
+
         GetWatchlistDataAccessInterface watchlistAccessObject = new WatchlistAccessObject();
+        ratingAccessObject = new UserRatingAccessObject();
 
         SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel, signupUserDAO);
         views.add(signupView, signupView.viewName);
@@ -116,6 +118,7 @@ public class Main {
 
         //create Map DAO
         mapUserDataAccessObject = new MapUserDataAccessObject(userDBMap, userFactory);
+
 
         //assign File DAOs
         if(true) {
