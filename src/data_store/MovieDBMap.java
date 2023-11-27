@@ -12,18 +12,23 @@ public class MovieDBMap implements MovieDBInterface{
         this.movies = new HashMap<>();
     }
 
+    @Override
     public HashMap<String, MovieStore> getMovies(){return movies;}
 
+    @Override
     public void setMovies(HashMap<String, MovieStore> movies){this.movies = movies;}
 
+    @Override
     public void addMovie(MovieStore movie){
         movies.put(movie.getMovieID(), movie);
     }
 
+    @Override
     public void removeMovie(String movieID){
         movies.remove(movieID);
     }
 
+    @Override
     public MovieStore getMovie(String movieID){
         return movies.get(movieID);
     }

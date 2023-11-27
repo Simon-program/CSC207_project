@@ -6,5 +6,5 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface GetRatingsDataAccessInterface {
-    public HashMap<Movie, Integer> getRatings(String user);
+    public List<Movie> getRatings(String user);
 }

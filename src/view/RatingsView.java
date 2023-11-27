@@ -26,8 +26,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
     private final MovieInfoController movieInfoController;
     private final GetRatingsViewModel getRatingsViewModel;
     private final Dimension DIMENSIONS = new Dimension(350,275);
-    private List<Movie> movieList;
-    private HashMap<Movie, Integer> ratings;
+    private List<Movie> ratings;
     private JScrollPane scrollPane;
     private JPanel panelList;
 
@@ -42,8 +41,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
         setLayout(new BorderLayout());
 
         // Create a scroll pane to hold the panel list
-        movieList = getRatingsViewModel.getState().getMovieList();
-        ratings = getRatingsViewModel.getState().getRatings();
+        ratings = getRatingsViewModel.getState().getMovieList();
         scrollPane = new JScrollPane(createPanelList(ratings));
         scrollPane.setPreferredSize(DIMENSIONS);
 
@@ -51,12 +49,12 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
 
     }
 
-    public JPanel createPanelList(HashMap<Movie, Integer> ratings) {
+    public JPanel createPanelList(List<Movie> ratings) {
         panelList = new JPanel(); // Initialize the panelList field
         panelList.setLayout(new BoxLayout(panelList, BoxLayout.Y_AXIS));
 
         if (ratings != null) {
-            for (Movie movie : ratings.keySet()) {
+            for (Movie movie : ratings) {
                 panelList.add(createClickablePanel(movie));
             }
         }
@@ -107,7 +105,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
         // Create the dropdown (combobox) for ratings
         String[] ratingOptions = {"1", "2", "3", "4", "5", "-"};
         JComboBox<String> ratingsDropdown = new JComboBox<>(ratingOptions);
-        ratingsDropdown.setSelectedItem(ratings.get(movie).toString());
+        ratingsDropdown.setSelectedItem(Integer.toString(movie.getUserRating()));
 
         JPanel controlsubpanel = new JPanel();
         controlsubpanel.setLayout(new BorderLayout(20,0));
@@ -151,8 +149,7 @@ public class RatingsView extends JPanel implements PropertyChangeListener {
     }
 
     private void UpdateView(GetRatingsState state) {
-        this.movieList = state.getMovieList();
-        this.ratings = state.getRatings();
+        this.ratings = state.getMovieList();
 
 
     }

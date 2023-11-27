@@ -7,5 +7,5 @@ import entity.Watchlist;
 import java.util.List;
 
 public interface GetWatchlistDataAccessInterface {
-    public Watchlist getWatchlist(String user);
+    public List<Movie> getWatchlist(String user);
 }

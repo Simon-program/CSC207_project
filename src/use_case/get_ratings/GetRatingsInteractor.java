@@ -4,6 +4,7 @@ import entity.Movie;
 import entity.Watchlist;
 import use_case.get_watchlist.GetWatchlistDataAccessInterface;
 import use_case.get_watchlist.GetWatchlistInteractor;
+import use_case.remove_from_watchlist.RemoveFromWatchlistOutputData;
 import utility.ApiInterface;
 
 import java.util.ArrayList;
@@ -34,26 +35,34 @@ public class GetRatingsInteractor implements GetRatingsInputBoundary {
 
     @Override
     public void execute(GetRatingsInputData getRatingsInputData) {
-        Watchlist watchlist = getwatchlistDataAccessObject.getWatchlist(getRatingsInputData.getCurrUsername());
+        List<Movie> ratings = ratingsDataAccessObject.getRatings(getRatingsInputData.getCurrUsername());
 
-        List<Movie> movieList = new ArrayList<>();
-
-        for (String movieId: watchlist.getMovieIDs()) {
-            movieList.add(apiInterface.getMovie(movieId));
-        }
-        HashMap<Movie, Integer> ratings = ratingsDataAccessObject.getRatings(getRatingsInputData.getCurrUsername());
-
-        ///Hashmap trimmer
-        List<Movie> filteredMovieList = new ArrayList<>();
-        for (Map.Entry<Movie, Integer> curr : ratings.entrySet()) {
-            if (watchlist.getMovieIDs().contains(curr.getKey().getImdbID())) {
-                filteredMovieList.add(curr.getKey());
-            }
-        }
-
-        GetRatingsOutputData getRatingsOutputData = new GetRatingsOutputData(ratings, filteredMovieList);
+        GetRatingsOutputData getRatingsOutputData = new GetRatingsOutputData(ratings);
 
         getRatingsPresenter.prepareGetRatingsView(getRatingsOutputData);
     }
+
+//    public void execute(GetRatingsInputData getRatingsInputData) {
+//        Watchlist watchlist = getwatchlistDataAccessObject.getWatchlist(getRatingsInputData.getCurrUsername());
+//
+//        List<Movie> movieList = new ArrayList<>();
+//
+//        for (String movieId: watchlist.getMovieIDs()) {
+//            movieList.add(apiInterface.getMovie(movieId));
+//        }
+//        HashMap<Movie, Integer> ratings = ratingsDataAccessObject.getRatings(getRatingsInputData.getCurrUsername());
+//
+//        ///Hashmap trimmer
+//        List<Movie> filteredMovieList = new ArrayList<>();
+//        for (Map.Entry<Movie, Integer> curr : ratings.entrySet()) {
+//            if (watchlist.getMovieIDs().contains(curr.getKey().getImdbID())) {
+//                filteredMovieList.add(curr.getKey());
+//            }
+//        }
+//
+//        GetRatingsOutputData getRatingsOutputData = new GetRatingsOutputData(ratings, filteredMovieList);
+//
+//        getRatingsPresenter.prepareGetRatingsView(getRatingsOutputData);
+//    }
 
 }

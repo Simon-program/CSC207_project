@@ -10,7 +10,7 @@ public class UserStore implements Serializable {
     private final String password;
 
 
-    private HashMap<String, UserMovie> userMovies;
+    private HashMap<String, UserMovieStore> userMovies;
 
     public UserStore(String username, String password){
         this.username = username;
@@ -23,9 +23,9 @@ public class UserStore implements Serializable {
 
     public String getPassword(){return password;}
 
-    public HashMap<String, UserMovie> getUserMovies(){return userMovies;}
+    public HashMap<String, UserMovieStore> getUserMovies(){return userMovies;}
 
-    public void setUserMovies(HashMap<String, UserMovie> userMovies) {
+    public void setUserMovies(HashMap<String, UserMovieStore> userMovies) {
         this.userMovies = userMovies;
     }
 

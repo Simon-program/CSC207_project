@@ -2,14 +2,14 @@ package data_store;
 
 import java.io.Serializable;
 
-public class UserMovie implements Serializable {
+public class UserMovieStore implements Serializable {
     private final String movieID;
 
     private boolean inWatchlist;
 
     private int rating;
 
-    public UserMovie(String movieID){
+    public UserMovieStore(String movieID){
         this.movieID = movieID;
         this.inWatchlist = false;
         this.rating = 0;

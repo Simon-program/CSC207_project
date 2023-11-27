@@ -22,11 +22,7 @@ public class GetRatingsPresenter implements GetRatingsOutputBoundary {
     @Override
     public void prepareGetRatingsView(GetRatingsOutputData getRatingsOutputData) {
         GetRatingsState state = new GetRatingsState();
-
-        HashMap<Movie, Integer> ratings = getRatingsOutputData.getRatings();
         List<Movie> movieList = getRatingsOutputData.getMovieList();
-
-        state.setRatings(ratings);
         state.setMovieList(movieList);
 
         getRatingsViewModel.setState(state);

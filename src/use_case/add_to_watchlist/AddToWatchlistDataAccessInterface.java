@@ -4,8 +4,12 @@ import entity.Movie;
 import entity.User;
 import entity.Watchlist;
 
+import java.util.List;
+
 public interface AddToWatchlistDataAccessInterface {
 
-    public Watchlist getWatchlist(String user);
+    public List<Movie> getWatchlist(String user);
+
+    public void addMovie(String user, String movieID);
   
 }

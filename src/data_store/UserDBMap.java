@@ -4,6 +4,10 @@ import entity.Movie;
 import entity.User;
 import entity.UserFactory;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,14 +15,53 @@ import java.util.List;
 
 public class UserDBMap implements UserDBInterface {
 
-    private final HashMap<String, UserStore> users;
+    private HashMap<String, UserStore> users;
     private MovieDBInterface movieDB;
+
+    private String userDBFilename = "userDB.ser";
+
+    private String movieDBFilename = "movieDB.ser";
 
     private UserFactory userFactory;
 
     public UserDBMap(UserFactory userFactory) {
         this.userFactory = userFactory;
-        this.users = new HashMap<>();
+        load();
+    }
+
+    public void save(){
+
+        // Save userDB to disk
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(userDBFilename))) {
+            oos.writeObject(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Save movieDB to disk
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(movieDBFilename))) {
+            oos.writeObject(movieDB.getMovies());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void load(){
+
+        // Load userDB from disk
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(userDBFilename))) {
+            users = (HashMap<String, UserStore>) ois.readObject();
+        } catch (Exception e) {
+            users = new HashMap<>();
+        }
+
+        // Load movieDB from disk
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(movieDBFilename))) {
+            movieDB = new MovieDBMap();
+            movieDB.setMovies((HashMap<String, MovieStore>) ois.readObject());
+        } catch (Exception e) {
+            movieDB = new MovieDBMap();
+        }
     }
 
     @Override
@@ -48,9 +91,9 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public List<Movie> getWatchlist(String username) {
-        Collection<UserMovie> movieList = users.get(username).getUserMovies().values();
+        Collection<UserMovieStore> movieList = users.get(username).getUserMovies().values();
         List<Movie> returnList = new ArrayList<>();
-        for (UserMovie userMovie : movieList) {
+        for (UserMovieStore userMovie : movieList) {
             if (!userMovie.isInWatchlist()){
                 continue;
             }
@@ -65,11 +108,11 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public void addToWatchlist(String username, String movieID) {
-        HashMap<String, UserMovie> userMovies = users.get(username).getUserMovies();
+        HashMap<String, UserMovieStore> userMovies = users.get(username).getUserMovies();
         if (userMovies.containsKey(movieID)) {
             userMovies.get(movieID).setInWatchlist(true);
         } else {
-            UserMovie movie = new UserMovie(movieID);
+            UserMovieStore movie = new UserMovieStore(movieID);
             movie.setInWatchlist(true);
             userMovies.put(movie.getMovieID(), movie);
         }
@@ -77,9 +120,9 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public void removeFromWatchlist(String username, String movieID) {
-        HashMap<String, UserMovie> userMovies = users.get(username).getUserMovies();
+        HashMap<String, UserMovieStore> userMovies = users.get(username).getUserMovies();
         if (userMovies.containsKey(movieID)) {
-            UserMovie userMovie = userMovies.get(movieID);
+            UserMovieStore userMovie = userMovies.get(movieID);
             if(userMovie.getRating() == 0){
                 userMovies.remove(movieID);
             } else {
@@ -90,9 +133,9 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public List<Movie> getRatings(String username) {
-        Collection<UserMovie> movieList = users.get(username).getUserMovies().values();
+        Collection<UserMovieStore> movieList = users.get(username).getUserMovies().values();
         List<Movie> returnList = new ArrayList<>();
-        for (UserMovie userMovie : movieList) {
+        for (UserMovieStore userMovie : movieList) {
             if (userMovie.getRating() == 0){
                 continue;
             }
@@ -107,11 +150,11 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public void addRating(String username, String movieID, int rating) {
-        HashMap<String, UserMovie> userMovies = users.get(username).getUserMovies();
+        HashMap<String, UserMovieStore> userMovies = users.get(username).getUserMovies();
         if (userMovies.containsKey(movieID)) {
             userMovies.get(movieID).setRating(rating);
         } else {
-            UserMovie movie = new UserMovie(movieID);
+            UserMovieStore movie = new UserMovieStore(movieID);
             movie.setRating(rating);
             userMovies.put(movie.getMovieID(), movie);
         }
@@ -119,9 +162,9 @@ public class UserDBMap implements UserDBInterface {
 
     @Override
     public void removeRating(String username, String movieID) {
-        HashMap<String, UserMovie> userMovies = users.get(username).getUserMovies();
+        HashMap<String, UserMovieStore> userMovies = users.get(username).getUserMovies();
         if (userMovies.containsKey(movieID)) {
-            UserMovie userMovie = userMovies.get(movieID);
+            UserMovieStore userMovie = userMovies.get(movieID);
             if(!userMovie.isInWatchlist()){
                 userMovies.remove(movieID);
             } else {

@@ -1,9 +1,6 @@
 package app;
 
-import data_access.FileUserDataAccessObject;
-import data_access.MapUserDataAccessObject;
-import data_access.UserRatingAccessObject;
-import data_access.WatchlistAccessObject;
+import data_access.*;
 import data_store.UserDBInterface;
 import data_store.UserDBMap;
 import entity.CommonUserFactory;
@@ -15,8 +12,10 @@ import interface_adapters.logged_in.LoggedInViewModel;
 import interface_adapters.login.LoginViewModel;
 import interface_adapters.movie_info.MovieInfoViewModel;
 import interface_adapters.signup.SignupViewModel;
+import use_case.add_to_watchlist.AddToWatchlistDataAccessInterface;
 import use_case.get_watchlist.GetWatchlistDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.remove_from_watchlist.RemoveFromWatchlistDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import utility.ApiInterface;
 import utility.OMDBCaller;
@@ -36,6 +35,19 @@ public class Main {
 
     private static SignupUserDataAccessInterface signupUserDAO;
     private static LoginUserDataAccessInterface loginUserDAO;
+
+    private static WatchlistAccessObject testWatchlistDataAccessObject;
+
+    private static MapWatchlistDataAccessObject mapWatchlistDataAccessObject;
+
+    private static GetWatchlistDataAccessInterface getWatchlistDAO;
+
+    private static RemoveFromWatchlistDataAccessInterface removeFromWatchlistDAO;
+
+    private static AddToWatchlistDataAccessInterface addToWatchlistDAO;
+
+    private static UserDBInterface userDBMap;
+
 
     public static void main(String[] args) {
         appInit();
@@ -71,6 +83,7 @@ public class Main {
         GetRatingsViewModel getRatingsViewModel = new GetRatingsViewModel();
         MovieInfoViewModel movieInfoViewModel = new MovieInfoViewModel();
 
+
         UserRatingAccessObject ratingAccessObject = new UserRatingAccessObject();
         GetWatchlistDataAccessInterface watchlistAccessObject = new WatchlistAccessObject();
 
@@ -80,8 +93,8 @@ public class Main {
         LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, loggedInViewModel, loginUserDAO);
         views.add(loginView, loginView.viewName);
 
-        WatchlistView watchlistView = GetWatchlistUseCaseFactory.create(api, getWatchlistViewModel, viewManagerModel, watchlistAccessObject, ratingAccessObject, movieInfoViewModel);
-        RatingsView ratingsView = GetRatingsUseCaseFactory.create(api, getRatingsViewModel, viewManagerModel, ratingAccessObject, watchlistAccessObject, movieInfoViewModel);
+        WatchlistView watchlistView = GetWatchlistUseCaseFactory.create(api, getWatchlistViewModel, viewManagerModel, getWatchlistDAO, ratingAccessObject, movieInfoViewModel);
+        RatingsView ratingsView = GetRatingsUseCaseFactory.create(api, getRatingsViewModel, viewManagerModel, ratingAccessObject, getWatchlistDAO, movieInfoViewModel);
 
         LoggedInView loggedInView = new LoggedInView(loggedInViewModel, watchlistView, ratingsView);
         views.add(loggedInView, loggedInView.viewName);
@@ -102,35 +115,48 @@ public class Main {
 
     public static void appInit() {
         UserFactory userFactory = new CommonUserFactory();
-        UserDBInterface userDBMap = new UserDBMap(userFactory);
+        userDBMap = new UserDBMap(userFactory);
 
         //Movie API initializer
         api = new OMDBCaller();
 
-        //create File DAO
+        //create File User DAO
         try {
             fileUserDataAccessObject = new FileUserDataAccessObject("./users.csv", userFactory);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        //create Map DAO
+        //create Map user DAO
         mapUserDataAccessObject = new MapUserDataAccessObject(userDBMap, userFactory);
 
-        //assign File DAOs
-        if(true) {
-            loginUserDAO = fileUserDataAccessObject;
-            signupUserDAO = fileUserDataAccessObject;
-        }
+        //assign File User DAOs
+//        loginUserDAO = fileUserDataAccessObject;
+//        signupUserDAO = fileUserDataAccessObject;
 
-        //assign Map DAOs
-        if(false) {
-            loginUserDAO = mapUserDataAccessObject;
-            signupUserDAO = mapUserDataAccessObject;
-        }
+        //assign Map User DAOs
+        loginUserDAO = mapUserDataAccessObject;
+        signupUserDAO = mapUserDataAccessObject;
+
+        //create test Watchlist DAO
+        testWatchlistDataAccessObject = new WatchlistAccessObject();
+
+        //create Map watchlist DAO
+        mapWatchlistDataAccessObject = new MapWatchlistDataAccessObject(userDBMap);
+
+        //assign test Watchlist DAO
+        getWatchlistDAO = testWatchlistDataAccessObject;
+        removeFromWatchlistDAO = testWatchlistDataAccessObject;
+        addToWatchlistDAO = testWatchlistDataAccessObject;
+
+        //assign Map watchlist DAO
+//        getWatchlistDAO = mapWatchlistDataAccessObject;
+//        removeFromWatchlistDAO = mapWatchlistDataAccessObject;
+//        addToWatchlistDAO = mapWatchlistDataAccessObject;
     }
 
     public static void appShutdown() {
+        userDBMap.save();
         System.out.println("Shutting down");
     }
 }

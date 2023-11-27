@@ -43,7 +43,6 @@ public class WatchlistView extends JPanel implements PropertyChangeListener {
 
         // Create a scroll pane to hold the panel list
         movieList = getWatchlistViewModel.getState().getMovieList();
-        ratings = getWatchlistViewModel.getState().getRatings();
         scrollPane = new JScrollPane(createPanelList(movieList));
         scrollPane.setPreferredSize(DIMENSIONS);
 
@@ -155,9 +154,6 @@ public class WatchlistView extends JPanel implements PropertyChangeListener {
 
     private void UpdateView(GetWatchlistState state) {
         this.movieList = state.getMovieList();
-        this.ratings = state.getRatings();
-
-
     }
 
     public void showWatchlist(String user) {

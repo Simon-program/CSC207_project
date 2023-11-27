@@ -23,12 +23,9 @@ public class GetWatchlistPresenter implements GetWatchlistOutputBoundary {
     public void prepareGetWatchlistView(GetWatchlistOutputData getWatchlistOutputData) {
         GetWatchlistState state = new GetWatchlistState();
 
-        Watchlist watchlist = getWatchlistOutputData.getWatchlist();
-        HashMap<Movie, Integer> ratings = getWatchlistOutputData.getRatings();
         List<Movie> movieList = getWatchlistOutputData.getMovieList();
 
-        state.setWatchlist(watchlist);
-        state.setRatings(ratings);
+
         state.setMovieList(movieList);
 
         getWatchlistViewModel.setState(state);
